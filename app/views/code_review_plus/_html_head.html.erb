@@ -1,0 +1,9 @@
+<!-- 添付ファイル表示 -->
+<%
+   if controller &&
+      controller.class.name == 'AttachmentsController' &&
+      controller.action_name == 'show'
+%>
+  <%= stylesheet_link_tag('context_menu') %>
+  <%= javascript_include_tag('context_menu') %>
+<% end %> <!-- if -->

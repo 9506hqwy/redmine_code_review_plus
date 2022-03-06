@@ -1,0 +1,55 @@
+<!-- 添付ファイル表示 -->
+<%
+   if @attachment &&
+      controller &&
+      controller.class.name == 'AttachmentsController' &&
+      controller.action_name == 'show'
+%>
+<%
+   review_ids = CodeReview.where(attachment_id: @attachment.id).map { |c| c.issue_id }
+   review_ids = [0] if review_ids.empty?
+
+   query = CodeReviewPlusQuery.new(name: l(:label_commented_issues), user: User.current)
+   query.add_filter('author_id', '=', ['me'])
+   query.add_filter('issue_id', '=', [review_ids.join(',')])
+   query.column_names = ['status', 'code_review_file_path', 'code_review_line', 'subject']
+   if params[:sort].present?
+     query.sort_criteria = params[:sort]
+   else
+     query.sort_criteria =
+       [
+         ['status', 'asc'],
+         ['code_review_file_path', 'asc'],
+         ['code_review_line', 'asc'],
+       ]
+   end
+
+   issue_count = query.issue_count
+   issue_pages = Redmine::Pagination::Paginator.new(
+     issue_count,
+     controller.per_page_option,
+     params[:page])
+
+   issues = query.issues(offset: issue_pages.offset, limit: issue_pages.per_page)
+%>
+
+<div id="code_review_plus_my_code_review_list">
+  <h3><%= l(:label_commented_issues) %></h3>
+  <% if query.valid? && issues.empty? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% else %>
+    <%= render_query_totals(query) %>
+    <%= render(partial: 'issues/list', locals: {issues: issues, query: query}) %>
+    <span class="pagination"><%= pagination_links_full(issue_pages, issue_count) %></span>
+  <% end %>
+</div>
+
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', function() {
+    let content = document.getElementById('content');
+    let list = document.getElementById('code_review_plus_my_code_review_list');
+    content.appendChild(list);
+  });
+</script>
+
+<% end %> <!-- if -->
