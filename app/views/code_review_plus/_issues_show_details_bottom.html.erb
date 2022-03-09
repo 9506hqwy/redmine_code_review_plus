@@ -1,0 +1,33 @@
+<!-- チケット表示 -->
+<%
+   if issue.present? &&
+      issue.code_review.present?
+%>
+<%
+   code_review = issue.code_review
+   context = 3
+   format = 'html'
+   cache_key = "code_review/#{code_review.id}/" + Digest::MD5.hexdigest("#{context}-{format}")
+%>
+
+<% cache(cache_key) do %>
+<div class="autoscroll">
+  <table class="filecontent syntaxhl">
+    <tbody>
+    <% show_code_comment_at(code_review, context, format) do |line_num, line, is_mark| %>
+      <% line_mark = is_mark ? 'line-mark' : '' %>
+      <tr id="L<%= line_num %>">
+        <th class="line-num <%= line_mark %>">
+          <a href="#L<%= line_num %>"><%= line_num %></a>
+        </th>
+        <td class="line-code">
+          <pre><%= line.html_safe %></pre>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>
+<% end %> <!-- cache(cache_key) do -->
+
+<% end %> <!-- if -->

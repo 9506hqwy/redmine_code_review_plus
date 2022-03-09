@@ -1,3 +1,15 @@
+<!-- チケット表示 -->
+<%
+   if controller &&
+      controller.class.name == 'IssuesController' &&
+      controller.action_name == 'show' &&
+      @issue.present? &&
+      @issue.code_review.present?
+%>
+  <%= stylesheet_link_tag('scm') %>
+  <%= stylesheet_link_tag('code_review_plus', plugin: :redmine_code_review_plus) %>
+<% end %> <!-- if -->
+
 <!-- 添付ファイル表示 -->
 <%
    if controller &&
