@@ -57,6 +57,12 @@ module RedmineCodeReviewPlus
       end
     end
 
+    def self.show_changeset_fragment(review, context, format, &block)
+      content = review.repository.cat(review.path, review.revision)
+      contents = split_content(content)
+      show_file_fragment(review.path, contents, review.line, context, format, &block)
+    end
+
     def self.show_diff_fragment(attachment, path, marked_line, context, format, &block)
       path = delete_revision(path)
 

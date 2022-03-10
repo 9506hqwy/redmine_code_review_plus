@@ -5,6 +5,8 @@ module RedmineCodeReviewPlus
     def show_code_comment_at(review, context=3, format='text', &block)
       if review.attachment.present?
         Utils.show_attachment_fragment(review, context, format, &block)
+      elsif review.change.present?
+        Utils.show_changeset_fragment(review, context, format, &block)
       end
     end
   end

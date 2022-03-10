@@ -6,6 +6,8 @@ class IssuesTest < Redmine::IntegrationTest
   include Redmine::I18n
 
   fixtures :attachments,
+           :changes,
+           :changesets,
            :enabled_modules,
            :enumerations,
            :issue_statuses,
@@ -16,6 +18,7 @@ class IssuesTest < Redmine::IntegrationTest
            :members,
            :projects,
            :projects_trackers,
+           :repositories,
            :roles,
            :trackers,
            :users,
@@ -74,6 +77,29 @@ class IssuesTest < Redmine::IntegrationTest
     c.attachment_id = attachment.id
     c.file_count = 0
     c.diff_all = true
+    c.save!
+
+    log_user('admin', 'admin')
+
+    get("/issues/#{issue.id}")
+
+    assert_response :success
+  end
+
+  def test_show_code_review_changeset
+    change = changes(:changes_001)
+    issue = issues(:issues_001)
+
+    c = CodeReview.new
+    c.project_id = change.changeset.repository.project_id
+    c.line = 1
+    c.updated_by_id = 1
+    c.issue_id = issue.id
+    c.action_type = 'diff'
+    c.file_path = '/test/some/path/in/the/repo'
+    c.change_id = change.id
+    c.file_count = 0
+    c.diff_all = false
     c.save!
 
     log_user('admin', 'admin')
