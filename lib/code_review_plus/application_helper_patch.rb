@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 module RedmineCodeReviewPlus
-  module IssuesHelperPatch
+  module ApplicationHelperPatch
     include RedmineCodeReviewPlus::Helper
   end
 end
 
-IssuesHelper.include RedmineCodeReviewPlus::IssuesHelperPatch
+ApplicationHelper.include RedmineCodeReviewPlus::ApplicationHelperPatch

@@ -23,5 +23,31 @@ module RedmineCodeReviewPlus
         end
       end
     end
+
+    def show_code_comment_text_table_at(review, context=3)
+      header1 = 'Line'
+      header1_width = (review.line + context).to_s.length
+      header1_width = header1.length if header1_width < header1.length
+
+      lines = []
+
+      lines << "#{header1.rjust(header1_width)}  | Content\n"
+      lines << "#{'-' * (header1_width + 2)}+#{'-' * 80}\n"
+
+      format = 'text'
+      cache_key = "code_review/#{review.id}/" +  Digest::MD5.hexdigest("#{context}-#{format}")
+      contents = Rails.cache.fetch(cache_key) do
+        show_code_comment_at(review, context, format)
+      end
+
+      contents ||= []
+      contents.each do |num, content, is_mark|
+        mark = ' '
+        mark = '*' if is_mark
+        lines << "#{num.to_s.rjust(header1_width)}#{mark} | #{content.slice(0, 79)}\n"
+      end
+
+      lines.join
+    end
   end
 end

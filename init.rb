@@ -2,9 +2,9 @@
 
 require_dependency 'code_review_plus/helper'
 # require helper module before other.
+require_dependency 'code_review_plus/application_helper_patch'
 require_dependency 'code_review_plus/attachments_helper_patch'
 require_dependency 'code_review_plus/issue_patch'
-require_dependency 'code_review_plus/issues_helper_patch'
 require_dependency 'code_review_plus/utils'
 require_dependency 'code_review_plus/view_listener'
 

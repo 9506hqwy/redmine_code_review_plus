@@ -8,6 +8,7 @@ class IssuesTest < Redmine::IntegrationTest
   fixtures :attachments,
            :changes,
            :changesets,
+           :email_addresses,
            :enabled_modules,
            :enumerations,
            :issue_statuses,
@@ -25,11 +26,46 @@ class IssuesTest < Redmine::IntegrationTest
            :versions
 
   def setup
+    Setting.plain_text_mail = 1
+    Setting.notified_events = ['issue_added']
+    ActionMailer::Base.deliveries.clear
+
     set_fixtures_attachments_directory
   end
 
   def teardown
     set_tmp_attachments_directory
+  end
+
+  def test_create_code_review
+    p = projects(:projects_001)
+    p.enable_module!(:code_review)
+    p.enable_module!(:mail_template)
+
+    @template = MailTemplate.new
+    @template.project_id = p.id
+    @template.notifiable = 'issue_added'
+    @template.template = '<%= raw show_code_comment_text_table_at(@issue.code_review) %>'
+    @template.save!
+
+    log_user('admin', 'admin')
+
+    new_record(Issue) do
+      post(
+        '/projects/ecookbook/code_review/new',
+        params: {
+          id: '1',
+          review: {
+            line: '1',
+            change_id: '1',
+            comment: 'test comment',
+            subject: 'test title',
+          },
+          action_type: 'diff',
+        })
+    end
+
+    assert_not_equal 0, ActionMailer::Base.deliveries.length
   end
 
   def test_show_no_code_review
