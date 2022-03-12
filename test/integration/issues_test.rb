@@ -108,4 +108,28 @@ class IssuesTest < Redmine::IntegrationTest
 
     assert_response :success
   end
+
+  def test_show_code_review_diff
+    issue = issues(:issues_001)
+
+    c = CodeReview.new
+    c.project_id = issue.project_id
+    c.line = 1
+    c.updated_by_id = 1
+    c.issue_id = issue.id
+    c.action_type = 'diff'
+    c.file_path = '.'
+    c.file_count = 0
+    c.rev = 3
+    c.rev_to = 1
+    c.diff_all = false
+    c.save!
+
+    log_user('admin', 'admin')
+
+    get("/issues/#{issue.id}")
+
+    # FIXME: HTTP500
+    assert_response :success
+  end
 end

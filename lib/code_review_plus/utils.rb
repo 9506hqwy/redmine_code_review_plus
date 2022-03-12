@@ -116,6 +116,13 @@ module RedmineCodeReviewPlus
       end
     end
 
+    def self.show_revision_fragment(repository, path, review, context, format, &block)
+      path = delete_revision(path)
+      content = repository.cat(path, review.revision)
+      contents = split_content(content)
+      show_file_fragment(path, contents, review.line, context, format, &block)
+    end
+
     def self.split_content(content)
       content ||= ''
       content
