@@ -34,13 +34,7 @@ module RedmineCodeReviewPlus
       lines << "#{header1.rjust(header1_width)}  | Content\n"
       lines << "#{'-' * (header1_width + 2)}+#{'-' * 80}\n"
 
-      format = 'text'
-      cache_key = "code_review/#{review.id}/" + Digest::MD5.hexdigest("#{context}-#{format}")
-      contents = Rails.cache.fetch(cache_key) do
-        show_code_comment_at(review, context, format)
-      end
-
-      contents ||= []
+      contents = show_code_comment_at(review, context, 'text') || []
       contents.each do |num, content, is_mark|
         mark = ' '
         mark = '*' if is_mark
