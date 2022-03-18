@@ -12,7 +12,7 @@ Redmine::Plugin.register :redmine_code_review_plus do
   name 'Redmine Code Review Plus plugin'
   author '9506hqwy'
   description 'This is a extension plugin for the code review plugin for Redmine'
-  version '0.1.0'
+  version '0.2.0'
   url 'https://github.com/9506hqwy/redmine_code_review_plus'
   author_url 'https://github.com/9506hqwy'
 
