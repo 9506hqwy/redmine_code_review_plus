@@ -3,6 +3,7 @@
 require File.expand_path('../../test_helper', __FILE__)
 
 class IssuesTest < Redmine::IntegrationTest
+  include ActiveJob::TestHelper
   include Redmine::I18n
 
   fixtures :attachments,
@@ -50,19 +51,21 @@ class IssuesTest < Redmine::IntegrationTest
 
     log_user('admin', 'admin')
 
-    new_record(Issue) do
-      post(
-        '/projects/ecookbook/code_review/new',
-        params: {
-          id: '1',
-          review: {
-            line: '1',
-            change_id: '1',
-            comment: 'test comment',
-            subject: 'test title',
-          },
-          action_type: 'diff',
-        })
+    perform_enqueued_jobs do
+      new_record(Issue) do
+        post(
+          '/projects/ecookbook/code_review/new',
+          params: {
+            id: '1',
+            review: {
+              line: '1',
+              change_id: '1',
+              comment: 'test comment',
+              subject: 'test title',
+            },
+            action_type: 'diff',
+          })
+      end
     end
 
     assert_not_equal 0, ActionMailer::Base.deliveries.length
