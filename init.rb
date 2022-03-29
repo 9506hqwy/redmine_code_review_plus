@@ -1,12 +1,20 @@
 # frozen_string_literal: true
 
-require_dependency 'code_review_plus/helper'
-# require helper module before other.
-require_dependency 'code_review_plus/application_helper_patch'
-require_dependency 'code_review_plus/attachments_helper_patch'
-require_dependency 'code_review_plus/issue_patch'
-require_dependency 'code_review_plus/utils'
-require_dependency 'code_review_plus/view_listener'
+basedir = File.expand_path('../lib', __FILE__)
+libraries =
+  [
+    'redmine_code_review_plus/helper',
+    # require helper module before other.
+    'redmine_code_review_plus/application_helper_patch',
+    'redmine_code_review_plus/attachments_helper_patch',
+    'redmine_code_review_plus/issue_patch',
+    'redmine_code_review_plus/utils',
+    'redmine_code_review_plus/view_listener',
+  ]
+
+libraries.each do |library|
+  require_dependency File.expand_path(library, basedir)
+end
 
 Redmine::Plugin.register :redmine_code_review_plus do
   name 'Redmine Code Review Plus plugin'

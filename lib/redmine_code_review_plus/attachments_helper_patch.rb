@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 module RedmineCodeReviewPlus
-  module AttachmentsHelper
+  module AttachmentsHelperPatch
     include IssuesHelper
     include QueriesHelper
   end
 end
 
-AttachmentsHelper.include RedmineCodeReviewPlus::AttachmentsHelper
+AttachmentsHelper.include RedmineCodeReviewPlus::AttachmentsHelperPatch
