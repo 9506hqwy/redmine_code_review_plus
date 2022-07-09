@@ -8,6 +8,7 @@ class DocumentsTest < Redmine::IntegrationTest
   fixtures :attachments,
            :enabled_modules,
            :enumerations,
+           :issues,
            :member_roles,
            :members,
            :projects,
