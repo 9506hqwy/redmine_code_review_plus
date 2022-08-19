@@ -48,11 +48,11 @@ module RedmineCodeReviewPlus
 
     def self.show_attachment_fragment(review, context, format, &block)
       content = File.read(review.attachment.diskfile, mode: 'rb')
-      contents = split_content(content)
 
       if review.attachment.is_diff?
-        show_diff_fragment(review.file_path, contents, review.line, context, format, &block)
+        show_diff_fragment(review.file_path, content, review.line, context, format, &block)
       else
+        contents = split_content(content)
         show_file_fragment(review.attachment.filename, contents, review.line, context, format, &block)
       end
     end
@@ -63,10 +63,10 @@ module RedmineCodeReviewPlus
       show_file_fragment(review.path, contents, review.line, context, format, &block)
     end
 
-    def self.show_diff_fragment(path, contents, marked_line, context, format, &block)
+    def self.show_diff_fragment(path, content, marked_line, context, format, &block)
       path = delete_revision(path)
 
-      diffs = Redmine::UnifiedDiff.new(contents)
+      diffs = Redmine::UnifiedDiff.new(content)
       diff = diffs.find { |d| delete_revision(d.file_name) == path }
 
       if diff.nil?
