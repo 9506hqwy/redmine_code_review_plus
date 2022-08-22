@@ -64,10 +64,10 @@ module RedmineCodeReviewPlus
     end
 
     def self.show_diff_fragment(path, content, marked_line, context, format, &block)
-      path = delete_revision(path)
+      path = delete_revision(path.chomp)
 
       diffs = Redmine::UnifiedDiff.new(content)
-      diff = diffs.find { |d| delete_revision(d.file_name) == path }
+      diff = diffs.find { |d| delete_revision(d.file_name.chomp) == path }
 
       if diff.nil?
         raise "Not found '#{path}'."
