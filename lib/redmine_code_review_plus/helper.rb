@@ -45,3 +45,8 @@ module RedmineCodeReviewPlus
     end
   end
 end
+
+Rails.application.config.after_initialize do
+  Mailer.send(:helper, RedmineCodeReviewPlus::Helper)
+  IssuesController.send(:helper, RedmineCodeReviewPlus::Helper)
+end

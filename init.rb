@@ -4,8 +4,6 @@ basedir = File.expand_path('../lib', __FILE__)
 libraries =
   [
     'redmine_code_review_plus/helper',
-    # require helper module before other.
-    'redmine_code_review_plus/application_helper_patch',
     'redmine_code_review_plus/attachments_helper_patch',
     'redmine_code_review_plus/issue_patch',
     'redmine_code_review_plus/utils',
