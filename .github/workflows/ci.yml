@@ -14,10 +14,12 @@ jobs:
       fail-fast: false
       matrix:
         db: [mysql57, mysql80, postgres, sqlite3]
-        version: ['3.4', '4.0', '4.1', '4.2', '5.0', '5.1']
+        version: ['3.4', '4.0', '4.1', '4.2', '5.0', '5.1', '6.0']
         exclude:
           - db: mysql57
             version: "5.1"
+          - db: mysql57
+            version: "6.0"
           - db: mysql80
             version: "3.4"
           - db: mysql80
@@ -144,10 +146,17 @@ jobs:
         git clone --depth 1 https://github.com/9506hqwy/redmine_mail_template.git
 
     - name: Checkout dependent and optional plugins (Redmine4.0 or later)
-      if: matrix.version != '3.4'
+      if: matrix.version != '3.4' && matrix.version != '6.0'
       run: |
         cd ${REDMINE_HOME}/plugins
-        git clone --depth 1 --branch develop42 https://github.com/9506hqwy/redmine_code_review.git
+        git clone --depth 1 --branch develop51 https://github.com/9506hqwy/redmine_code_review.git
+        git clone --depth 1 https://github.com/9506hqwy/redmine_mail_template.git
+
+    - name: Checkout dependent and optional plugins (Redmine4.0 or later)
+      if: matrix.version == '6.0'
+      run: |
+        cd ${REDMINE_HOME}/plugins
+        git clone --depth 1 --branch develop60 https://github.com/9506hqwy/redmine_code_review.git
         git clone --depth 1 https://github.com/9506hqwy/redmine_mail_template.git
 
     - name: Setup environments

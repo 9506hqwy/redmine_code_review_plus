@@ -15,7 +15,7 @@ pushd "${REDMINE_HOME}"
 
 git clone --depth 1 -b 5.0-stable "${REDMINE_URL}" 5.0
 git clone --depth 1 -b 5.1-stable "${REDMINE_URL}" 5.1
-#git clone --depth 1 -b 6.0-stable "${REDMINE_URL}" 6.0
+git clone --depth 1 -b 6.0-stable "${REDMINE_URL}" 6.0
 
 for BASE in $(ls)
 do
@@ -38,11 +38,12 @@ EOF
     echo "gem 'debug'" > Gemfile.local
 
     pushd ./plugins
-    git clone --depth 1 -b develop50 "${CODE_REVIEW_URL}"
+    BRANCH="develop$(echo ${BASE} | tr -d '.')"
+    git clone --depth 1 -b "${BRANCH}" "${CODE_REVIEW_URL}"
     git clone --depth 1 "${MAIL_TEMPLATE_URL}"
     popd
 
-    bundle install
+    bundle install --with development test
     bundle exec rake generate_secret_token
     bundle exec rake db:migrate
     echo ja | bundle exec rake redmine:load_default_data
