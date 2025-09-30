@@ -4,7 +4,7 @@ set -euo pipefail
 CODE_REVIEW="https://github.com/9506hqwy/redmine_code_review.git"
 MAIL_TEMPLATE="https://github.com/9506hqwy/redmine_mail_template.git"
 
-CODE_REVIEW_BRANCH="develop60"
+CODE_REVIEW_BRANCH="develop61"
 if [[ ! "${REDMINE_VERSION}" =~ ^6\. ]]; then
     CODE_REVIEW_BRANCH="develop51"
 fi
